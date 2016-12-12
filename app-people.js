@@ -13,23 +13,65 @@ const done = function() {
 };
 
 const create = function(givenName, surname, dob, gender, height, weight) {
-  /* Add Code Here */
+
+Person.create({
+  'name.given': givenName,
+  'name.surname': surname,
+  dob: dob,
+  gender: gender,
+  height: height,
+  weight: weight
+})
+.then(function(person){
+  console.log(person.toJSON());
+})
+.catch(console.error)
+.then(done);
 };
 
 const index = function() {
-  /* Add Code Here */
+  Person.find()
+    .then(function(people) {
+      people.forEach(function(person) {
+        console.log(person.toJSON());
+      });
+    })
+    .catch(console.error)
+    .then(done);
 };
 
 const show = function(id) {
-  /* Add Code Here */
+
+  Person.findById(id)
+    .then(function(person) {
+      console.log(person.toJSON());
+    })
+    .catch(console.error)
+    .then(done);
 };
 
 const update = function(id, field, value) {
-  /* Add Code Here */
+let modify = {};
+modify[field] = value;
+Person.findById(id)
+  .then(function(person) {
+    person[field] = value;
+    return person.save();
+    })
+    .then(function(person){
+      console.log(person.toJSON());
+    })
+  .catch(console.error)
+  .then(done);
 };
 
 const destroy = function(id) {
-  /* Add Code Here */
+  Person.findById(id)
+    .then(function(person) {
+      return person.remove();
+    })
+    .catch(console.error)
+    .then(done);
 };
 
 db.once('open', function() {
@@ -43,8 +85,8 @@ db.once('open', function() {
     case 'create':
       let givenName = process.argv[3];
       let surname = process.argv[4];
-      let dob =  process.argv[5];
-      let gender =  process.argv[6];
+      let dob = process.argv[5];
+      let gender = process.argv[6];
       let height = process.argv[7];
       let weight = process.argv[8];
       if (true || givenName) {

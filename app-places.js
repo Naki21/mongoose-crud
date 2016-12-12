@@ -6,6 +6,8 @@ mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://localhost/mongoose-crud');
 const db = mongoose.connection;
 
+const Place = require('./models/places.js');
+
 const done = function() {
   db.close();
 };
@@ -16,19 +18,51 @@ const create = function(name, latitude, longitude, country) {
 };
 
 const index = function(field, criterion) {
-  /* Add Code Here */
+  Place.find()
+    .then(function(places) {
+      places.forEach(function(place) {
+        console.log(place.toJSON());
+      });
+    })
+    .catch(console.error)
+    .then(done);
 };
 
-const show = function() {
-  /* Add Code Here */
+const show = function(id) {
+
+
+    Place.findById(id)
+      .then(function(place) {
+        console.log(place.toJSON());
+      })
+      .catch(console.error)
+      .then(done);
 };
 
 const update = function(id, field, value) {
-  /* Add Code Here */
+
+  let modify = {};
+  modify[field] = value;
+  Place.findById(id)
+    .then(function(place) {
+      place[field] = value;
+      return place.save();
+      })
+      .then(function(place){
+        console.log(place.toJSON());
+      })
+    .catch(console.error)
+    .then(done);
 };
 
 const destroy = function(id) {
-  /* Add Code Here */
+
+    Place.findById(id)
+      .then(function(place) {
+        return place.remove();
+      })
+      .catch(console.error)
+      .then(done);
 };
 
 // UI
